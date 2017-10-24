@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from time import sleep
 import re
 import json
 import click
@@ -43,7 +44,7 @@ def load_data():
         cookie = {'XSRF-TOKEN': a["csrfToken"]}
         clan_refresh_source = refresh_source.format(source=clanstats)
         requests.get(clan_refresh_source, cookies=cookie)
-
+        sleep(6)
         req = requests.get(clanstats)
         data = req.text
         soup = BeautifulSoup(data, 'html.parser')
@@ -61,7 +62,7 @@ def load_data():
             player = Player.query.filter_by(usertag=usertag).first()
             if player is None:
                 player = Player(usertag=usertag)
-            active_players.append(player)
+            active_players.append(usertag)
             player.name = rowdata[row_map["name"]].a.text.strip()
             player.trophies = int(rowdata[row_map["trophies"]].text)
             player.level = int(rowdata[row_map["level"]].span.text)
@@ -117,7 +118,6 @@ def load_data():
             crowns = int(rowdata[row_map["crowns"]].text)
             donations = int(rowdata[row_map["donations"]].text)
 
-            # Sunday and monday until 7:55
             nowmin = (int(now.strftime("%H")) * 60) +  int(now.strftime("%M"))
             is_pre_monday = (int(now.strftime("%w")) == 1
                              and nowmin < cutoff_minute)
@@ -140,6 +140,12 @@ def load_data():
 
             db.session.add(this_data)
             db.session.commit()
+
+        for clan_player in ClanPlayer.query.filter_by(clan=clan, active=True):
+            if clan_player.player.usertag not in active_players:
+                clan_player.active = False
+                db.session.add(clan_player)
+                db.session.commit()
 
 
 @app.cli.command()

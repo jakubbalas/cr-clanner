@@ -1,7 +1,29 @@
 {% block content %}
 Clan Data!
-<table>
-    <tr></tr>
-    <tr></tr>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Player Name</th>
+        {% for week in timetable %}
+        <th> {{week}}</th>
+        {% endfor %}
+    </tr>
+
+    </thead>
+    <tbody>
+    {% for player in players %}
+    <tr>
+        <td>{{player.player.name}}</td>
+        {% for week in timetable %}
+        <td>
+            {% if (data[player.player.usertag][week]) %}
+                {{ data[player.player.usertag][week].crowns }} <br>
+                {{ data[player.player.usertag][week].donations }}
+            {% endif %}
+        </td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+    </tbody>
 </table>
 {% endblock %}
