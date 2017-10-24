@@ -2,7 +2,8 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-SQLALCHEMY_DATABASE_URI = 'sqlite:////app/var/clanner.db'
+SQLALCHEMY_DATABASE_URI = 'postgresql://clanner:clanner@db:5432/clanner'
+
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
