@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta
 import bcrypt
 
 from app.db import db
-from hashlib import md5
 from flask_login import UserMixin
 
 
@@ -45,16 +43,22 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     usertag = db.Column(db.String(20), index=True, unique=True)
     name = db.Column(db.String(64), unique=False)
-    data = db.relationship('WeekData', backref='player', lazy='dynamic')
+    trophies = db.Column(db.Integer)
+    level = db.Column(db.Integer)
 
 
 class ClanPlayer(db.Model):
     __tablename__ = 'clan_player'
 
     id = db.Column(db.Integer, primary_key=True)
-    clan_id = db.Column(db.Integer, db.ForeignKey('clan.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('player.id'))
+    role = db.Column(db.String(20))
     active = db.Column(db.Boolean, default=False)
+
+    player = db.relationship('Player', backref='clan', uselist=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id'))
+
+    clan = db.relationship('Clan', backref='players')
+    clan_id = db.Column(db.Integer, db.ForeignKey('clan.id'))
 
 
 class WeekData(db.Model):
@@ -65,4 +69,6 @@ class WeekData(db.Model):
     crowns = db.Column(db.Integer)
     year = db.Column(db.Integer)
     week = db.Column(db.Integer)
+
+    clan_player = db.relationship('ClanPlayer', backref='data')
     clan_player_id = db.Column(db.Integer, db.ForeignKey('clan_player.id'))
