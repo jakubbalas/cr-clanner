@@ -149,6 +149,46 @@ def load_data():
 
 
 @app.cli.command()
+@click.option('--url')
+def import_file(url):
+    """import data from file stored online - check readme for csv format"""
+    file = requests.get(url)
+    data = file.text.split("\r\n")
+    clan_tag = data[0].split(",")[0]
+    clan = Clan.query.filter_by(clantag=clan_tag).first()
+
+    periods = data[1].split(",")[1:]
+    print(periods)
+    for row in data[2:]:
+        bits = row.split(",")
+        if len(bits) < len(periods) + 1:
+            continue
+        player = Player.query.filter_by(usertag=bits[0].strip()).first()
+        clan_player = ClanPlayer.query.filter_by(player=player, clan=clan)\
+            .first()
+        for i in range(len(periods)):
+            if bits[i+1] == "-":
+                continue
+            year, week = periods[i].split("-")
+            week_data = WeekData.query.filter_by(
+                clan_player=clan_player,
+                year=year,
+                week=week).first()
+            if week_data is None:
+                week_data = WeekData(
+                    clan_player=clan_player,
+                    week=week,
+                    year=year
+                )
+            week_data.crowns = bits[i+1]
+            db.session.add(week_data)
+        db.session.commit()
+
+
+
+
+
+@app.cli.command()
 @click.option('--tag')
 @click.option('--name')
 def add_clan(tag, name):
