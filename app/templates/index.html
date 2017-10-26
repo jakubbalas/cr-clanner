@@ -1,6 +1,6 @@
+{% extends "layout.html" %}
 {% block content %}
-Clan Data!
-<table border="1">
+<table class="ui fixed striped sortable celled table">
     <thead>
     <tr>
         <th>Player Name</th>
@@ -15,10 +15,10 @@ Clan Data!
     <tr>
         <td>{{player.player.name}}</td>
         {% for week in timetable %}
-        <td>
+        <td data-sort-value="">
             {% if (data[player.player.usertag][week]) %}
-                {{ data[player.player.usertag][week].crowns }} <br>
-                {{ data[player.player.usertag][week].donations }}
+                <i class="empty star icon"></i>{{ data[player.player.usertag][week].crowns or '-' }}
+                (<i class="gift icon"></i>{{ data[player.player.usertag][week].donations or '-' }})
             {% endif %}
         </td>
         {% endfor %}
