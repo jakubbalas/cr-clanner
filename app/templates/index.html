@@ -15,7 +15,11 @@
     <tr>
         <td>{{player.player.name}}</td>
         {% for week in timetable %}
-        <td data-sort-value="">
+        {% if data[player.player.usertag][week] and (data[player.player.usertag][week].crowns) %}
+            <td data-sort-value="{{ "%03d"|format(data[player.player.usertag][week].crowns) }}">
+        {% else %}
+            <td data-sort-value="000">
+        {% endif %}
             {% if (data[player.player.usertag][week]) %}
                 <i class="empty star icon"></i>{{ data[player.player.usertag][week].crowns or '-' }}
                 (<i class="gift icon"></i>{{ data[player.player.usertag][week].donations or '-' }})
