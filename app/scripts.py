@@ -122,7 +122,7 @@ def load_data():
             is_pre_monday = (int(now.strftime("%w")) == 1
                              and nowmin < cutoff_minute)
             is_post_friday = (
-                (int(now.strftime("%w")) > 5 and nowmin > cutoff_minute)
+                (int(now.strftime("%w")) > 4 and nowmin > cutoff_minute)
                 or int(now.strftime("%w")) == 0
             )
 

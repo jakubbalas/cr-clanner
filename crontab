@@ -1,2 +1,3 @@
-55 7    * * *   root    export APP_ENV=integration && export FLASK_APP=/app/run.py && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && /usr/local/bin/flask load_data >> /var/log/cron.log 2>&1
+55 6    * * *   root    export APP_ENV=integration && export FLASK_APP=/app/run.py && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && /usr/local/bin/flask load_data >> /var/log/cron.log 2>&1
+0 12, 16, 20    * * *   root    export APP_ENV=integration && export FLASK_APP=/app/run.py && export LC_ALL=C.UTF-8 && export LANG=C.UTF-8 && /usr/local/bin/flask load_data >> /var/log/cron.log 2>&1
 #
