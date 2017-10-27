@@ -1,51 +1,54 @@
 {% extends "layout.html" %}
 {% block content %}
-<table class="ui fixed striped sortable celled table">
-    <thead>
-        <tr>
-            <th>Player Name</th>
-            {% for week in timetable %}
-                <th class="right aligned">
-                    <span class="ui {{ loop.index == 1 and 'purple' }} horizontal label">
-                        {% if loop.index == 1 %}
-                            current week
-                        {% else %}
-                            week {{week[5:]}}
-                        {% endif %}
-                    </span>
-                </th>
-            {% endfor %}
-        </tr>
-    </thead>
-    <tbody>
-        {% for player in players %}
+<div style="overflow: auto; width: 100%;">
+    <table class="ui fixed striped sortable celled table"
+           style="width: 150em;">
+        <thead>
             <tr>
-                <td data-sort-value="{{player.player.name|upper}}">
-                    {% if player.role in ['Leader','Co-Leader','Elder'] %}
-                        <i class="{{ 'empty' if player.role == 'Elder' }} star icon"></i>
-                    {% else %}
-                        <i class="icon"></i>
-                    {% endif %}
-                        {{player.player.name}}
-                </td>
+                <th>Player Name</th>
                 {% for week in timetable %}
-                    {% set week_data = data[player.player.usertag][week] %}
-                        <td class="right aligned"
-                            data-sort-value="{{ week_data and (week_data.crowns) and "%03d"|format(week_data.crowns) or '000' }}">
-                        {% if (week_data) %}
-                            {% if week_data.donations %}
-                            <span style="opacity: 0.4;">
-                                (<i class="gift icon"></i>{{ week_data.donations or '0' }})
-                            </span>
+                    <th class="right aligned">
+                        <span class="ui {{ loop.index == 1 and 'purple' }} horizontal label">
+                            {% if loop.index == 1 %}
+                                current week
+                            {% else %}
+                                week {{week[5:]}}
                             {% endif %}
-                            {{ week_data.crowns or '0' }}
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
+                        </span>
+                    </th>
                 {% endfor %}
             </tr>
-        {% endfor %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% for player in players %}
+                <tr>
+                    <td data-sort-value="{{player.player.name|upper}}">
+                        {% if player.role in ['Leader','Co-Leader','Elder'] %}
+                            <i class="{{ 'empty' if player.role == 'Elder' }} star icon"></i>
+                        {% else %}
+                            <i class="icon"></i>
+                        {% endif %}
+                            {{player.player.name}}
+                    </td>
+                    {% for week in timetable %}
+                        {% set week_data = data[player.player.usertag][week] %}
+                            <td class="right aligned"
+                                data-sort-value="{{ week_data and (week_data.crowns) and "%03d"|format(week_data.crowns) or '000' }}">
+                            {% if (week_data) %}
+                                {% if week_data.donations %}
+                                <span style="opacity: 0.4;">
+                                    (<i class="gift icon"></i>{{ week_data.donations or '0' }})
+                                </span>
+                                {% endif %}
+                                {{ week_data.crowns or '0' }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}
